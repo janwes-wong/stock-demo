@@ -78,6 +78,17 @@ export default {
       },
     },
   },
+  mounted() {
+    this.$bus.$on("updateItem", (id, title) => {
+      this.itemInfos.forEach((o) => {
+        if (o.id === id) o.title = title;
+      });
+    });
+  },
+  beforeDestroy() {
+    // 关闭事件总线中组件所使用到的事件
+    this.$bus.$off("updateItem");
+  },
 };
 </script>
 
@@ -107,9 +118,21 @@ body {
   border: 1px solid #bd362f;
 }
 
+.btn-edit {
+  color: #fff;
+  background-color: skyblue;
+  border: 1px solid rgb(118, 167, 187);
+  margin-right: 5px;
+}
+
 .btn-warning:hover {
   color: #ffff;
   background-color: #bd362f;
+}
+
+.btn-edit:hover {
+  color: #ffff;
+  background-color: rgb(50, 112, 136);
 }
 
 .btn:focus {

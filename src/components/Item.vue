@@ -6,11 +6,18 @@
         :checked="itemObj.complate"
         @change="handleCheck(itemObj.id)"
       />
-      <span>{{ itemObj.title }}</span>
+      <span v-show="!itemObj.editFlag">{{ itemObj.title }}</span>
+      <input
+        type="text"
+        v-show="itemObj.editFlag"
+        :value="itemObj.title"
+        @blur="handleBlur(itemObj, $event)"
+      />
     </label>
     <button class="btn btn-warning" @click="handleDelete(itemObj.id)">
       删除
     </button>
+    <button class="btn btn-edit" @click="handleEdit(itemObj)">编辑</button>
   </li>
 </template>
 
@@ -28,6 +35,20 @@ export default {
       if (confirm("是否确定删除?")) {
         this.deleteItem(id);
       }
+    },
+    // 编辑商品信息
+    handleEdit(itemObj) {
+      if (itemObj.editFlag === undefined) {
+        itemObj.editFlag = true;
+        console.log(itemObj);
+      } else {
+        this.$set(itemObj, "editFlag", true);
+      }
+    },
+    // 失去焦点
+    handleBlur(itemObj, event) {
+      itemObj.editFlag = false;
+      this.$bus.$emit("updateItem", itemObj.id, event.target.value);
     },
   },
 };
